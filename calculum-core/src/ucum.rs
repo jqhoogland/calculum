@@ -1,7 +1,7 @@
 
 impl From<String> for UnitAtom {
     pub fn from(s: String) -> Self {
-        UnitAtom.METER
+        UnitAtom.Meter
     }
 }
 
@@ -62,8 +62,8 @@ mod units {
                 .map(|s: String| Unit::try_from(s).unwrap()).collect();
 
             match s {
-                "" => Ok(Units::BASE),
-                _ => Ok(Units::DIM(units)),
+                "" => Ok(Units::Base),
+                _ => Ok(Units::Dim(units)),
             }
         }
     }
@@ -105,15 +105,15 @@ mod tests {
 
     #[test]
     fn it_parses_dimensionality_of_units() {
-        assert_eq!(Units::try_from("").unwrap(), Units::BASE);
+        assert_eq!(Units::try_from("").unwrap(), Units::DimLess);
         assert_eq!(Units::try_from("m").unwrap(),
-                   Units::DIM(vec![Unit::try_from("m").unwrap()]));
+                   Units::Dim(vec![Unit::try_from("m").unwrap()]));
     }
 
     #[test]
     fn it_splits_on_unit_multiplication() {
         assert_eq!(Units::try_from("m.kg").unwrap(),
-                   Units::DIM(vec![Unit::try_from("m").unwrap(),
+                   Units::Dim(vec![Unit::try_from("m").unwrap(),
                                    Unit::try_from("kg").unwrap()]));
     }
 
@@ -121,7 +121,7 @@ mod tests {
     fn it_splits_on_unit_division() {
         // Need to keep this info!
         assert_eq!(Units::try_from("m/kg").unwrap(),
-                   Units::DIM(vec![Unit::try_from("m").unwrap(),
+                   Units::Dim(vec![Unit::try_from("m").unwrap(),
                                    Unit::try_from("kg").unwrap()]));
     }
 

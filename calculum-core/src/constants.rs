@@ -1,177 +1,184 @@
 #[repr(i8)]
 #[derive(Debug, PartialEq, Clone)]
-pub enum Prefix {
-    YOTTA = 24,
-    ZETTA = 21,
-    EXA = 18,
-    PETA = 15,
-    TERA = 12,
-    GIGA = 9,
-    MEGA = 6,
-    KILO = 3,
-    HECTO = 2,
-    DECA = 1,
-    NONE = 0,
-    DECI = -1,
-    CENTI = -2,
-    MILLI = -3,
-    MICRO = -6,
-    NANO = -9,
-    PICO = -12,
-    FEMTO = -15,
-    ATTO = -18,
-    ZEPTO = -21,
-    YOCTO = -24,
+pub enum UnitPrefix {
+    Yotta = 24,
+    Zetta = 21,
+    Exa = 18,
+    Peta = 15,
+    Tera = 12,
+    Giga = 9,
+    Mega = 6,
+    Kilo = 3,
+    Hecto = 2,
+    Deca = 1,
+    None = 0,
+    Deci = -1,
+    Centi = -2,
+    Milli = -3,
+    Micro = -6,
+    Nano = -9,
+    Pico = -12,
+    Femto = -15,
+    Atto = -18,
+    Zepto = -21,
+    Yocto = -24,
 }
 
-#[derive(Debug, PartialOrd, PartialEq)]
+#[derive(Debug, PartialEq, PartialOrd)]
 pub enum Dimension {
     // Base
-    TIME,
-    LENGTH,
-    MASS,
-    CHARGE,
-    TEMP,
-    AMOUNT,
-    LUMINOUS_INTENSITY,
+    Time,
+    Length,
+    Mass,
+    Charge,
+    Temp,
+    Amount,
+    Luminosity,
 
     // "Dimensionless"
-    PLANE_ANGLE,
-    SOLID_ANGLE,
+    PlaneAngle,
+    SolidAngle,
 
     // "Derived"
 
-    // From LENGTH
-    AREA,
-    VOLUME,
-    LINEIC_NUM,
+    // From Length
+    Area,
+    Volume,
+    LineicNum,
 
-    // From TIME
-    FREQUENCY,
+    // From Time
+    Frequency,
 
-    // MECHANICS
-    VELOCITY,
-    ACCELERATION,
-    FORCE,
-    PRESSURE,
-    VISCOSITY_DYNAMIC,
-    VISCOSITY_KINEMATIC,
-    ENERGY,
-    ACTION,
-    POWER,
+    // Mechanics
+    Velocity,
+    Acceleration,
+    Force,
+    Pressure,
+    ViscosityDynamic,
+    ViscosityKinematic,
+    Energy,
+    Action,
+    Power,
 
-    // ELECTRICITY & MAGNETISM
-    CURRENT,
-    POTENTIAL,
-    CAPACITANCE,
-    RESISTANCE,
-    CONDUCTANCE,
-    FLUX_MAGNETIC,
-    INDUCTANCE,
-    PERMITTIVITY_ELECTRIC,
-    PERMITTIVITY_MAGNETIC,
+    // Electricity & Magnetism
+    Current,
+    Potential,
+    Capacitance,
+    Resistance,
+    Conductance,
+    FluxMagnetic,
+    Inductance,
+    PermittivityElectric,
+    PermittivityMagnetic,
 
-    FLUX_LUMINOUS,
-    ILLUMINANCE,
-    BRIGHTNESS,
+    FluxLuminous,
+    Illuminance,
+    Brightness,
 
-    // RADIOACTIVITY
-    RADIOACTIVITY,
-    ION_DOSE,
-    ENERGY_DOSE,
-    DOSE_EQUIVALENT,
+    // Radioactivity
+    Radioactivity,
+    IonDose,
+    EnergyDose,
+    DoseEquivalent,
 
 
-    OTHER(String)
+    Other(UnitAtom)
 }
 
-#[derive(Deubg)]
+#[derive(Debug, PartialEq, PartialOrd, Clone)]
 pub enum UnitAtom {
     // Base Units
-    METER,
-    SECOND,
-    GRAM,
-    RADIAN,
-    KELVIN,
-    COULOMB,
-    CANDELA,
+    Meter,
+    Second,
+    Gram,
+    Radian,
+    Kelvin,
+    Coulomb,
+    Candela,
 
     // Dimensionless
-    PI,
-    TEN_TO(i8),
-    PERCENT,
+    Pi,
+    TenTo(i8),
+    Percent,
     PPTH,
     PPM,
     PPB,
     PPTR,
 
     // SI
-    MOLE,
-    STERADIAN,
-    HERTZ,
-    NEWTON,
-    PASCAL,
-    JOULE,
-    WATT,
-    AMPERE,
-    VOLT,
-    FARAD,
-    OHM,
-    SIEMENS,
-    WEBER,
-    DEGREE_CELSIUS,
-    TESLA,
-    HENRY,
-    LUMEN,
-    LUX,
-    BECQUEREL,
-    GRAY,
-    SIEVERT,
+    Mole,
+    Steradian,
+    Hertz,
+    Newton,
+    Pascal,
+    Joule,
+    Watt,
+    Ampere,
+    Volt,
+    Farad,
+    Ohm,
+    Siemens,
+    Weber,
+    DegreeCelsius,
+    Tesla,
+    Henry,
+    Lumen,
+    Lux,
+    Becquerel,
+    Gray,
+    Sievert,
 
     // ISO 1000, ISO 2955, ANSI X3.50
-    GON_GRADE,
-    DEGREE,
-    MINUTE_ANGLE,
-    SECOND_ANGLE,
-    LITER,
-    ARE,
-    MINUTE,
-    HOUR,
-    DAY,
-    YEAR_TROPICAL,
-    YEAR_MEAN_JULIAN,
-    YEAR_MEAN_GREGORIAN,
-    YEAR,
-    WEEK,
-    MONTH_SYNODAL,
-    MONTH_MEAN_JULIAN,
-    MONTH_MEAN_GREGORIAN,
-    MONTH,
-    TONNE,
-    BAR,
-    AMU,
-    ELECTRON_VOLT,
-    ASTRONOMIC_UNIT,
-    PARSEC
+    GonGrade,
+    Degree,
+    MinuteAngle,
+    SecondAngle,
+    Liter,
+    Are,
+    Minute,
+    Hour,
+    Day,
+    YearTropical,
+    YearMeanJulian,
+    YearMeanGregorian,
+    Year,
+    Week,
+    MonthSynodal,
+    MonthMeanJulian,
+    MonthMeanGregorian,
+    Month,
+    Tonne,
+    Bar,
+    Amu,
+    ElectronVolt,
+    AstronomicUnit,
+    Parsec,
 
     // CGS
     // Customary
+
+    Other(String)
 }
 
 impl UnitAtom {
     pub fn to_dimension(&self) -> Dimension {
-        use Dimension::*;
+        use Dimension;
         use UnitAtom::*;
 
         match self {
-            SECOND | HOUR | DAY | WEEK => TIME,
-            METER  => LENGTH,
-            COULOMB => CHARGE,
-            KELVIN => TEMP,
-            MOLE => AMOUNT,
-            CANDELA => LUMINOSITY,
-            _ => OTHER(self.unit.to_string())
+            Second | Hour | Day | Week => Dimension::Time,
+            Meter  => Dimension::Length,
+            Coulomb => Dimension::Charge,
+            Kelvin => Dimension::Temp,
+            Mole => Dimension::Amount,
+            Candela => Dimension::Luminosity,
+            _ => Dimension::Other(self.clone()) // .to_string() ?
         }
     }
 }
 
+impl From<String> for UnitAtom {
+    fn from(s: String) -> Self {
+        UnitAtom::Other(s)
+    }
+}

@@ -11,7 +11,7 @@ Calculum is a minilanguage for arithmetic with units and measures.
 8052.9692 mi/h2 
 ```
 
-It takes inspiration from [Frinklang](https://frinklang.org/fspdocs.html) with a unit syntax based on the [Unified Coding for Units & Measures (UCUM)](). 
+It takes inspiration from [Frinklang](https://frinklang.org/fspdocs.html) with a unit syntax based on the [Unified Coding for Units & Measures (Ucum)](). 
 
 The rest of the language is based on excel — not because I like excel but because I figured it would make adoption a little easier in the contexts this library is most useful. Forgive me. Fortunately for you (if this is making you feel nauseous), the core is abstracted away from syntactics. Thanks to wasm, you can start calculating with units and measures in any language of choice.
 
@@ -23,7 +23,7 @@ First, Frinklang is written in Java. Second, it isn't open source. Third, it doe
 
 Many existing libraries that work with units and measures are principally non-exhaustive. They enumerate allowed units and measures as types, which is great because it's (probably) faster and can guarantee "unit-safety" at compile time rather than runtime. 
 
-I needed an alternative that focused more on flexibility and extensibility, and I was willing to sacrifice some performance and unit-safety to get there.
+I needed an alternative that focused more on flexibility and extensibility, and I was willing to sacrifice some performance and unit-safety to get this done.
 
 
 ## Why

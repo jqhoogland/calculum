@@ -7,11 +7,12 @@ trait UnitEq<T> {
 }
 
 mod unit {
-    use crate::constants::{Prefix, Dimension};
+    use super::UnitEq;
+    use crate::constants::{UnitPrefix, Dimension, UnitAtom};
 
     #[derive(Debug, PartialEq)]
     pub struct Unit {
-        pub prefix: Option<Prefix>,
+        pub prefix: Option<UnitPrefix>,
         pub unit: UnitAtom,
         pub power: i8,
     }
@@ -20,20 +21,20 @@ mod unit {
     impl Unit {
         pub fn is_metric(&self) -> bool {
             match self.prefix {
-                Some(_) => True,
-                None => False,
+                Some(_) => true,
+                None => false,
             }
         }
 
         pub fn is_base(&self) -> bool {
             match self.subunits() {
-                Some(_) => False,
-                None => True,
+                Some(_) => false,
+                None => true,
             }
         }
 
         pub fn subunits(&self) -> Option<Vec<Unit>> {
-
+            None
         }
 
         pub fn dimension(&self) -> Dimension {
@@ -44,17 +45,17 @@ mod unit {
     /// Constructors
     impl Unit {
         pub fn new_atomic(atom: &str) -> Self {
-            new(Prefix.NONE, atom, 1)
+            Unit::new(Some(UnitPrefix::None), atom, 1)
         }
 
-        pub fn new_bare(atom: &str, power: i8) -> Self {
-            new(Prefix.NONE, unit, power)
+        pub fn new_bare(unit: &str, power: i8) -> Self {
+            Unit::new(Some(UnitPrefix::None), unit, power)
         }
 
-        pub fn new(prefix: Option<Prefix>, unit: &str, power: i8) -> Self {
+        pub fn new(prefix: Option<UnitPrefix>, unit: &str, power: i8) -> Self {
             Unit {
                 prefix,
-                unit,
+                unit: UnitAtom::from(unit.to_string()),
                 power
             }
         }
@@ -72,20 +73,21 @@ mod unit {
 }
 
 mod units {
+    use super::UnitEq;
     use super::unit::{Unit};
 
     #[derive(Debug, PartialEq)]
     pub enum Units {
-        DIM(Vec<Unit>),
-        DIMLESS
+        Dim(Vec<Unit>),
+        DimLess
     }
 
     /// Constructors
     impl Units {
         pub fn new(units: Vec<Unit>) -> Self {
             match units.len() {
-                0 => Units::DIMLESS,
-                _ => Units::DIM(sort_units(units))
+                0 => Units::DimLess,
+                _ => Units::Dim(sort_units(units))
             }
         }
     }
@@ -95,15 +97,15 @@ mod units {
         units
     }
 
-    impl UnitEq<Units> for Units {
+    impl UnitEq<&Units> for Units {
         fn is_similar(&self, other: &Self) -> bool {
             use Units::*;
 
             match (self, other) {
-                (DIM(self_units), DIM(other_units)) => false,  // FIXME
-                (DIM(_), BASE) => false,
-                (BASE, DIM(_)) => false,
-                (BASE, BASE) => true,
+                (Dim(_self_units), Dim(_other_units)) => false,  // FIXME
+                (Dim(_), _) => false,
+                (_, Dim(_)) => false,
+                (_, _) => true,
             }
         }
 
@@ -111,10 +113,10 @@ mod units {
             use Units::*;
 
             match (self, other) {
-                (DIM(self_units), DIM(other_units)) => false,  // FIXME
-                (DIM(_), BASE) => false,
-                (BASE, DIM(_)) => false,
-                (BASE, BASE) => true,
+                (Dim(_self_units), Dim(_other_units)) => false,  // FIXME
+                (Dim(_), _) => false,
+                (_, Dim(_)) => false,
+                (_, _) => true,
             }
         }
     }
@@ -142,13 +144,15 @@ mod quantity {
 
 #[cfg(test)]
 mod tests {
-    use constants::Prefix;
+    use crate::constants::UnitPrefix;
     use super::unit::Unit;
     use super::units::Units;
+    use super::UnitEq;
+
 
     #[test]
     fn it_normalizes_si_base_unit_order() {
-        let value = 1;
+        let _value = 1;
 
         let m = ||  Unit::new_bare("m", 1);
         // SI uses kg as its base, but that's ridiculous.
@@ -170,7 +174,7 @@ mod tests {
 
     #[test]
     fn it_normalizes_si_unit_aliases() {
-        let value = 1;
+        let _value = 1;
 
         let m = ||  Unit::new_atomic("m");
         let g = || Unit::new_atomic("g");
@@ -182,16 +186,16 @@ mod tests {
 
         assert_eq!(us1, us2);
 
-        let us3 = Units::new(vec![n(), m()]);
-        let us4 = Units::new(vec![g(), m(), s2(), m()]);
+        let _us3 = Units::new(vec![n(), m()]);
+        let _us4 = Units::new(vec![g(), m(), s2(), m()]);
 
     }
 
     #[test]
     fn it_ignores_prefixes_when_detecting_similarity() {
         let m = || Unit::new_bare("m", 1);
-        let cm =  || Unit::new(Prefix.CENTI, "m", 1);
-        let km =  || Unit::new(Prefix.KILO, "m", 1);
+        let cm =  || Unit::new(Some(UnitPrefix::Centi), "m", 1);
+        let km =  || Unit::new(Some(UnitPrefix::Kilo), "m", 1);
 
         assert!(m().is_similar(&cm()));
         assert!(cm().is_similar(&m()));
