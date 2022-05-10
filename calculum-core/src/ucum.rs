@@ -1,4 +1,10 @@
 
+impl From<String> for UnitAtom {
+    pub fn from(s: String) -> Self {
+        UnitAtom.METER
+    }
+}
+
 mod units {
     use calculum::units::*;
 
