@@ -19,6 +19,12 @@ The rest of the language is based on excel — not because I like excel but beca
 
 First, Frinklang is written in Java. Second, it isn't open source. Third, it doesn't use UCUM, which IMHO is the best (i.e., legible and compact) unit coding system we have.  
 
+## Why not an existing library like [UOM](https://github.com/iliekturtles/uom)?
+
+Many existing libraries that work with units and measures are principally non-exhaustive. They enumerate allowed units and measures as types, which is great because it's (probably) faster and can guarantee "unit-safety" at compile time rather than runtime. 
+
+I needed an alternative that focused more on flexibility and extensibility, and I was willing to sacrifice some performance and unit-safety to get there.
+
 
 ## Why
 
