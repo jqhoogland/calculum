@@ -1,80 +1,8 @@
-trait UnitEq<T> {
-    /// Up to a dimensionless scaling factor
-    fn is_similar(&self, other: T) -> bool;
-
-    /// Can be converted (i.e., has the same dimension)
-    fn is_compatible(&self, other: T) -> bool;
-}
-
-mod unit {
-    use super::UnitEq;
-    use crate::constants::{UnitPrefix, Dimension, UnitAtom};
-
-    #[derive(Debug, PartialEq)]
-    pub struct Unit {
-        pub prefix: Option<UnitPrefix>,
-        pub unit: UnitAtom,
-        pub power: i8,
-    }
-
-    /// Accessors
-    impl Unit {
-        pub fn is_metric(&self) -> bool {
-            match self.prefix {
-                Some(_) => true,
-                None => false,
-            }
-        }
-
-        pub fn is_base(&self) -> bool {
-            match self.subunits() {
-                Some(_) => false,
-                None => true,
-            }
-        }
-
-        pub fn subunits(&self) -> Option<Vec<Unit>> {
-            None
-        }
-
-        pub fn dimension(&self) -> Dimension {
-            self.unit.to_dimension()
-        }
-    }
-
-    /// Constructors
-    impl Unit {
-        pub fn new_atomic(atom: &str) -> Self {
-            Unit::new(Some(UnitPrefix::None), atom, 1)
-        }
-
-        pub fn new_bare(unit: &str, power: i8) -> Self {
-            Unit::new(Some(UnitPrefix::None), unit, power)
-        }
-
-        pub fn new(prefix: Option<UnitPrefix>, unit: &str, power: i8) -> Self {
-            Unit {
-                prefix,
-                unit: UnitAtom::from(unit.to_string()),
-                power
-            }
-        }
-    }
-
-    impl UnitEq<&Self> for Unit {
-        fn is_similar(&self, other: &Self) -> bool {
-            self.unit == other.unit && self.power == other.power
-        }
-
-        fn is_compatible(&self, other: &Self) -> bool {
-            self.dimension() == other.dimension()
-        }
-    }
-}
+use crate::unit::{UnitEq, Unit};
 
 mod units {
     use super::UnitEq;
-    use super::unit::{Unit};
+    use super::Unit;
 
     #[derive(Debug, PartialEq)]
     pub enum Units {
@@ -109,7 +37,7 @@ mod units {
             }
         }
 
-        fn is_compatible(&self, other: &Self) -> bool {
+        fn is_commensurable(&self, other: &Self) -> bool {
             use Units::*;
 
             match (self, other) {
@@ -122,30 +50,12 @@ mod units {
     }
 }
 
-mod quantity {
-    use super::units;
-
-    #[derive(Debug, PartialEq)]
-    pub struct Quantity<T> {
-        value: T,
-        units: units::Units,
-    }
-
-    impl<T> Quantity<T> {
-        pub fn new(value: T, units: units::Units) -> Self {
-            Quantity {
-                value,
-                units
-            }
-        }
-    }
-}
 
 
 #[cfg(test)]
 mod tests {
     use crate::constants::UnitPrefix;
-    use super::unit::Unit;
+    use super::Unit;
     use super::units::Units;
     use super::UnitEq;
 
