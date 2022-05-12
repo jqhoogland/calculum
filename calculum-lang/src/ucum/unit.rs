@@ -211,7 +211,7 @@ mod tokenizer {
 
     use super::constants::*;
 
-    #[derive(Debug, PartialEq, Clone)]
+    #[derive(PartialEq, Clone)]
     pub struct Unit {
         pub prefix: String,
         pub atom: String,
@@ -269,11 +269,26 @@ mod tokenizer {
 
     impl fmt::Display for Unit {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            write!(f, "{}{}{}", self.prefix, self.atom, self.exp)
+            match &self.annotation {
+                Some(a) => write!(f, "{}{}{}{{{}}}", self.prefix, self.atom, self.exp, a),
+                None => write!(f, "{}{}{}", self.prefix, self.atom, self.exp),
+            }
+
         }
     }
 
-    #[derive(Debug, Clone)]
+
+    impl fmt::Debug for Unit {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            match &self.annotation {
+                Some(a) => write!(f, "{}{}{}{{{}}}", self.prefix, self.atom, self.exp, a),
+                None => write!(f, "{}{}{}", self.prefix, self.atom, self.exp),
+            }
+
+        }
+    }
+
+    #[derive(Clone)]
     pub struct Units<'a>(pub &'a Vec<Unit>);
 
     impl<'a> fmt::Display for Units<'a> {

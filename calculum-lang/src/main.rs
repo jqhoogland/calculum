@@ -1,7 +1,6 @@
 use std::io::{self, Write};
 
-use crate::ucum::term;
-use crate::ucum::unit;
+use crate::ucum::expression;
 
 mod ucum;
 
@@ -19,10 +18,7 @@ fn main() {
             .read_line(&mut input)
             .expect("Failed to read line");
 
-        let unit_term = term::UnitTerm::new(input.trim()).unwrap();
-        for unit in unit_term.units.iter() {
-            println!("{:?}", unit);
-        }
+        println!("{:?}", expression::interpret(input.trim()));
 
         input.clear()
     }

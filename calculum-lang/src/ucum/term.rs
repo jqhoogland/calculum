@@ -3,6 +3,7 @@
 //!   as part of a symbol)
 //! - [ ] Support for exponents `10^`
 //!
+use std::ops;
 use std::slice::Iter;
 use std::fmt::{self, Display};
 
@@ -267,10 +268,15 @@ impl UnitTerm {
             units: Self::normalize_units(units),
         })
     }
+
+    pub fn invert(&mut self) {
+        self.units = self.units.iter().map(|u| u.invert()).collect();
+    }
 }
 
 impl ReducibleUnit for UnitTerm {
-    fn normalize_units(units: Vec<unit::Unit>) -> Vec<unit::Unit> {
+    fn normalize_units(mut units: Vec<unit::Unit>) -> Vec<unit::Unit> {
+        units.sort_by(|a, b| a.atom.cmp(&b.atom));
         let mut result: Vec<unit::Unit> = vec![];
 
         for unit in units.into_iter() {
@@ -296,7 +302,6 @@ impl ReducibleUnit for UnitTerm {
             .flat_map(|u| u.as_base_units())
             .collect();
 
-        units.sort_by(|a, b| a.atom.cmp(&b.atom));
         Self::normalize_units(units)
     }
 }
@@ -320,6 +325,39 @@ impl fmt::Debug for UnitTerm {
 impl fmt::Display for UnitTerm {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", unit::Units(&self.units))
+    }
+}
+
+impl ops::AddAssign for UnitTerm {
+    fn add_assign(&mut self, other: Self) {
+        if self != &other {
+            panic!("Units {:?} and {:?} are not compatible", self, other)
+        }
+    }
+}
+
+impl ops::SubAssign for UnitTerm {
+    fn sub_assign(&mut self, other: Self) {
+        if self != &other {
+            panic!("Units {:?} and {:?} are not compatible", self, other)
+        }
+    }
+}
+
+impl ops::MulAssign for UnitTerm {
+    fn mul_assign(&mut self, other: Self) {
+        self.units.extend(other.units);
+        self.units = Self::normalize_units((*self.units).to_vec());
+    }
+}
+
+impl ops::DivAssign for UnitTerm {
+    fn div_assign(&mut self, other: Self) {
+        self.invert();
+        self.units.extend(other.units);
+        self.invert();
+
+        self.units = Self::normalize_units((*self.units).to_vec());
     }
 }
 
@@ -404,8 +442,8 @@ mod tests {
 
         assert_eq!(unit_term.mag, 1.);
         assert_eq!(unit_term.units, vec![
-            unit("m", 1),
             unit("kg", 1),
+            unit("m", 1),
             unit("s", -2)
         ])
     }
@@ -415,20 +453,6 @@ mod tests {
         let unit_term = UnitTerm::new("m.kg/5s2").unwrap();
 
         assert_eq!(unit_term.mag, 0.2);
-        assert_eq!(unit_term.units, vec![
-            unit("m", 1),
-            unit("kg", 1),
-            unit("s", 2)
-        ]);
-
-        let unit_term = UnitTerm::new("m.kg/5/s2").unwrap();
-
-        assert_eq!(unit_term.mag, 0.2);
-        assert_eq!(unit_term.units, vec![
-            unit("m", 1),
-            unit("kg", 1),
-            unit("s", -2)
-        ]);
     }
 
     // -- Conversions

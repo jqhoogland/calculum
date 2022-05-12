@@ -40,6 +40,7 @@
 //! # Representation
 //! - `m` is parsed as a "Unit" in `ucum::unit`.
 //! - `kg.m/s2` is parsed as a "Unit Term" in `ucum::term`.
+//! - `10 kg.m/s2` & `10kg.m/s2` are considered a "Quantity".
 //! - `10 kg.m/s2 / 10 m/s2 == 1 kg` is parsed as an "Expression" in `ucum::expression`.
 //!
 
