@@ -37,11 +37,24 @@
 //!   parsed as an alternative to `.`, (multiplication) rather than `^`
 //!   (exponentiation). (In what universe does `*` make sense as exponentiation?)
 //!
-//! # Representation
-//! - `m` is parsed as a "Unit" in `ucum::unit`.
-//! - `kg.m/s2` is parsed as a "Unit Term" in `ucum::term`.
-//! - `10 kg.m/s2` & `10kg.m/s2` are considered a "Quantity".
-//! - `10 kg.m/s2 / 10 m/s2 == 1 kg` is parsed as an "Expression" in `ucum::expression`.
+//! # Vocabulary
+//!
+//! #### Atoms, Prefixes, Units, Unit Terms, Quantities, and Expressions
+//! - `km` is a "**unit**" in `ucum::unit`. It consists of a "**prefix**"
+//!   (`k`) and "**unit atom**" (`m`). Only metric units may include prefixes.
+//! - `kg.m/s2` is parsed as a "**unit term**" in `ucum::term`.
+//! - `10 kg.m/s2` or `10kg.m/s2` is a "**quantity**".
+//! - `10 kg.m/s2 / 10 m/s2 == 1 kg` is an "**expression**" in
+//!   `ucum::expression`.
+//!
+//! ### Comparing units, terms, & quantities
+//! - Two units are "**equal**" iff they are the exact same unit.
+//! - Two unit terms are "**equal**" if they consist of the same base units
+//!   (e.g., `N` and `kg.m/s2`).
+//! - Two unit terms are "**commensurable**" if they they have the same dimension
+//!   & can be converted (e.g., `m/s`, `km/h`, and `[mi]/h`).
+//! - Two quantities are "**equal**" if their unit terms are commensurable,
+//!   and if their magnitudes are equal after conversion.
 //!
 
 pub mod term;
