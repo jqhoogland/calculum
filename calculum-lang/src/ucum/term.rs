@@ -166,17 +166,26 @@ mod parser {
             }
         }
 
-        pub fn divide(&mut self) -> Option<unit::Unit> {
-            let next_t  = self.next();
-            match next_t {
-                Some(u) => Some(u.invert()),
-                _ => panic!("[Syntax Error] Invalid token {:?} encountered after multiplication '.'", next_t)
-            }
-        }
-
-        pub fn multiply(&mut self, rhs: i8) -> Option<unit::Unit> {
+        pub fn mul_i(&mut self, rhs: i8) -> Option<unit::Unit> {
             self.mag *= rhs as f64;
             self.next()
+        }
+
+        pub fn div_i(&mut self, rhs: i8) -> Option<unit::Unit> {
+            self.mag /= rhs as f64;
+            self.next()
+        }
+
+        pub fn div_next(&mut self) -> Option<unit::Unit> {
+            let maybe_t = self.tokenizer.next();
+            match maybe_t {
+                Some(t) => match  t {
+                    Token::Unit(u) => Some(u.invert()),
+                    Token::Int(i) => self.div_i(i),
+                    _ => panic!("[Syntax Error] Invalid token {:?} encountered after division '/'", t)
+                },
+                _ => panic!("[Syntax Error] Invalid token {:?} encountered after division '/'", maybe_t)
+            }
         }
     }
 
@@ -189,9 +198,9 @@ mod parser {
             match maybe_t {
                 Some(t) => match t {
                     Token::Mul => self.next(),
-                    Token::Div => self.divide(),
+                    Token::Div => self.div_next(),
                     Token::Unit(u) => Some(u),
-                    Token::Int(i) => self.multiply(i)
+                    Token::Int(i) => self.mul_i(i)
                 },
                 None => None
             }

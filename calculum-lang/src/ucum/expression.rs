@@ -28,11 +28,4 @@ mod tokenizer {
 
 #[cfg(test)]
 mod tests {
-
-    #[test]
-    fn it_does_nothing() {
-        assert_eq!(0, 1)
-    }
-
-
 }
