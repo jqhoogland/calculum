@@ -1,7 +1,7 @@
 
 mod tokenizer {
     use std::collections::VecDeque;
-    use crate::ucum::unit::parser::Unit;
+    use crate::ucum::unit::Unit;
 
 
     #[derive(Debug, PartialEq)]
@@ -30,8 +30,8 @@ mod tokenizer {
 mod tests {
 
     #[test]
-    fn it_splits_on_mul_and_div() {
-        asserteq!(0, 1)
+    fn it_does_nothing() {
+        assert_eq!(0, 1)
     }
 
 
